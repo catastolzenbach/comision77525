@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API de Productos y Carritos - Comisión 77525</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            text-align: center;
+            max-width: 600px;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            margin: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .features {
+            margin: 30px 0;
+            text-align: left;
+        }
+        .feature {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .feature h3 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+        .feature p {
+            margin: 0;
+            color: #666;
+        }
+        .github-link {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .github-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 API de Productos y Carritos</h1>
+        <p class="subtitle">Comisión 77525 - Backend con Node.js y Express</p>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>📦 Gestión de Productos</h3>
+                <p>CRUD completo para productos con persistencia en JSON</p>
+            </div>
+            <div class="feature">
+                <h3>🛒 Gestión de Carritos</h3>
+                <p>Creación y gestión de carritos de compra</p>
+            </div>
+            <div class="feature">
+                <h3>🔧 API REST</h3>
+                <p>Endpoints bien estructurados con manejo de errores</p>
+            </div>
+            <div class="feature">
+                <h3>💾 Persistencia</h3>
+                <p>Almacenamiento en archivos products.json y carts.json</p>
+            </div>
+        </div>
+
+        <a href="https://github.com/catastolzenbach/comision77525" class="btn" target="_blank">
+            📁 Ver Repositorio en GitHub
+        </a>
+        
+        <a href="https://github.com/catastolzenbach/comision77525/blob/main/API_DOCUMENTATION.md" class="btn" target="_blank">
+            📚 Documentación de la API
+        </a>
+
+        <div class="github-link">
+            <p><strong>Para probar la API localmente:</strong></p>
+            <p>1. Clona el repositorio</p>
+            <p>2. Ejecuta <code>npm install</code></p>
+            <p>3. Ejecuta <code>npm start</code></p>
+            <p>4. Ve a <a href="http://localhost:8080" target="_blank">http://localhost:8080</a></p>
+        </div>
+    </div>
+</body>
+</html> 

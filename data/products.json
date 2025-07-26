@@ -1,0 +1,171 @@
+[
+  {
+    "id": 1,
+    "title": "Laptop Gaming",
+    "description": "Laptop para gaming de alto rendimiento con RTX 4060",
+    "code": "LAP001",
+    "price": 899990,
+    "status": true,
+    "stock": 10,
+    "category": "Electrónicos",
+    "thumbnails": [
+      "laptop1.jpg",
+      "laptop2.jpg"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Camisa Formal Blanca",
+    "description": "Camisa formal blanca de algodón premium",
+    "code": "0101",
+    "price": 15990,
+    "status": true,
+    "stock": 40,
+    "category": "Ropa",
+    "thumbnails": []
+  },
+  {
+    "id": 3,
+    "title": "Camisa Casual Azul",
+    "description": "Camisa casual azul de algodón",
+    "code": "1234",
+    "price": 12990,
+    "status": true,
+    "stock": 40,
+    "category": "Ropa",
+    "thumbnails": []
+  },
+  {
+    "id": 4,
+    "title": "Smartphone iPhone 15",
+    "description": "iPhone 15 Pro Max con cámara de 48MP y chip A17 Pro",
+    "code": "IPH001",
+    "price": 899990,
+    "status": true,
+    "stock": 25,
+    "category": "Electrónicos",
+    "thumbnails": [
+      "iphone15_1.jpg",
+      "iphone15_2.jpg"
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Auriculares Sony WH-1000XM5",
+    "description": "Auriculares inalámbricos con cancelación de ruido líder en la industria",
+    "code": "SON001",
+    "price": 299990,
+    "status": true,
+    "stock": 15,
+    "category": "Audio",
+    "thumbnails": [
+      "sony_wh1000xm5.jpg"
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Nike Air Max 270",
+    "description": "Zapatillas deportivas con tecnología Air Max para máximo confort",
+    "code": "NIK001",
+    "price": 89990,
+    "status": true,
+    "stock": 40,
+    "category": "Calzado",
+    "thumbnails": [
+      "nike_airmax270_1.jpg",
+      "nike_airmax270_2.jpg"
+    ]
+  },
+  {
+    "id": 7,
+    "title": "MacBook Pro 14",
+    "description": "MacBook Pro con chip M3 Pro, 14 pulgadas, 512GB SSD",
+    "code": "MAC001",
+    "price": 1499990,
+    "status": true,
+    "stock": 8,
+    "category": "Computadoras",
+    "thumbnails": [
+      "macbook_pro_14.jpg"
+    ]
+  },
+  {
+    "id": 8,
+    "title": "Samsung 4K Smart TV 55",
+    "description": "Televisor Samsung 55 pulgadas 4K Ultra HD con Smart TV",
+    "code": "SAM001",
+    "price": 599990,
+    "status": true,
+    "stock": 12,
+    "category": "Televisores",
+    "thumbnails": [
+      "samsung_tv_55.jpg"
+    ]
+  },
+  {
+    "id": 9,
+    "title": "PlayStation 5",
+    "description": "Consola de videojuegos PlayStation 5 con controlador DualSense",
+    "code": "PS5001",
+    "price": 399990,
+    "status": true,
+    "stock": 20,
+    "category": "Videojuegos",
+    "thumbnails": [
+      "ps5_console.jpg",
+      "ps5_controller.jpg"
+    ]
+  },
+  {
+    "id": 10,
+    "title": "Cafetera Nespresso Vertuo",
+    "description": "Cafetera automática Nespresso Vertuo con cápsulas exclusivas",
+    "code": "NES001",
+    "price": 129990,
+    "status": true,
+    "stock": 30,
+    "category": "Hogar",
+    "thumbnails": [
+      "nespresso_vertuo.jpg"
+    ]
+  },
+  {
+    "id": 11,
+    "title": "GoPro Hero 11 Black",
+    "description": "Cámara de acción 4K con estabilización HyperSmooth 5.0",
+    "code": "GOP001",
+    "price": 299990,
+    "status": true,
+    "stock": 18,
+    "category": "Fotografía",
+    "thumbnails": [
+      "gopro_hero11.jpg"
+    ]
+  },
+  {
+    "id": 12,
+    "title": "Kindle Paperwhite",
+    "description": "E-reader Kindle Paperwhite con pantalla de 6.8 pulgadas y resistencia al agua",
+    "code": "KIN001",
+    "price": 89990,
+    "status": true,
+    "stock": 35,
+    "category": "Lectura",
+    "thumbnails": [
+      "kindle_paperwhite.jpg"
+    ]
+  },
+  {
+    "id": 13,
+    "title": "Apple Watch Series 9",
+    "description": "Apple Watch Series 9 con monitor cardíaco y GPS integrado",
+    "code": "APP001",
+    "price": 299990,
+    "status": true,
+    "stock": 22,
+    "category": "Wearables",
+    "thumbnails": [
+      "apple_watch_series9.jpg"
+    ]
+  }
+]

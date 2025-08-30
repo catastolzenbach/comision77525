@@ -1,0 +1,195 @@
+<h2>⚡ Productos en Tiempo Real</h2>
+
+<div class="form-container">
+    <h3>➕ Agregar Nuevo Producto</h3>
+    <form id="addProductForm">
+        <div class="form-group">
+            <label for="title">Título:</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Descripción:</label>
+            <textarea id="description" name="description" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="code">Código:</label>
+            <input type="text" id="code" name="code" required>
+        </div>
+        <div class="form-group">
+            <label for="price">Precio:</label>
+            <input type="number" id="price" name="price" required>
+        </div>
+        <div class="form-group">
+            <label for="stock">Stock:</label>
+            <input type="number" id="stock" name="stock" required>
+        </div>
+        <div class="form-group">
+            <label for="category">Categoría:</label>
+            <input type="text" id="category" name="category" required>
+        </div>
+        <div class="form-group">
+            <label for="status">Estado:</label>
+            <select id="status" name="status">
+                <option value="true">Activo</option>
+                <option value="false">Inactivo</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="thumbnails">Imágenes (separadas por comas):</label>
+            <input type="text" id="thumbnails" name="thumbnails" placeholder="imagen1.jpg, imagen2.jpg">
+        </div>
+        <button type="submit" class="btn btn-success">➕ Agregar Producto</button>
+    </form>
+</div>
+
+<div id="statusMessage"></div>
+
+<div id="productsContainer">
+    {{#if products.length}}
+        <div class="product-grid" id="productsGrid">
+            {{#each products}}
+                <div class="product-card" data-product-id="{{id}}">
+                    <div class="product-title">{{title}}</div>
+                    <div class="product-description">{{description}}</div>
+                    <div class="product-price">${{price}}</div>
+                    <div class="product-stock">Stock: {{stock}}</div>
+                    <div class="product-category">{{category}}</div>
+                    <div style="margin-top: 10px;">
+                        <small>Código: {{code}}</small>
+                    </div>
+                    <button class="btn btn-danger" onclick="deleteProduct({{id}})">🗑️ Eliminar</button>
+                </div>
+            {{/each}}
+        </div>
+    {{else}}
+        <div class="empty-state" id="emptyState">
+            <h3>No hay productos disponibles</h3>
+            <p>Agrega productos usando el formulario de arriba</p>
+        </div>
+    {{/if}}
+</div>
+
+<script>
+    const socket = io();
+    
+    // Escuchar eventos de productos
+    socket.on('productAdded', (product) => {
+        addProductToDOM(product);
+        showStatus('Producto agregado exitosamente', 'success');
+    });
+    
+    socket.on('productDeleted', (productId) => {
+        removeProductFromDOM(productId);
+        showStatus('Producto eliminado exitosamente', 'success');
+    });
+    
+    socket.on('productError', (error) => {
+        showStatus(error, 'error');
+    });
+    
+    // Manejar formulario de agregar producto
+    document.getElementById('addProductForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(e.target);
+        const productData = {
+            title: formData.get('title'),
+            description: formData.get('description'),
+            code: formData.get('code'),
+            price: Number(formData.get('price')),
+            stock: Number(formData.get('stock')),
+            category: formData.get('category'),
+            status: formData.get('status') === 'true',
+            thumbnails: formData.get('thumbnails').split(',').map(s => s.trim()).filter(s => s)
+        };
+        
+        // Enviar por WebSocket
+        socket.emit('addProduct', productData);
+        
+        // Limpiar formulario
+        e.target.reset();
+    });
+    
+    // Función para eliminar producto
+    function deleteProduct(productId) {
+        if (confirm('¿Estás seguro de que quieres eliminar este producto?')) {
+            socket.emit('deleteProduct', productId);
+        }
+    }
+    
+    // Función para agregar producto al DOM
+    function addProductToDOM(product) {
+        const productsGrid = document.getElementById('productsGrid');
+        const emptyState = document.getElementById('emptyState');
+        
+        // Ocultar estado vacío si existe
+        if (emptyState) {
+            emptyState.style.display = 'none';
+        }
+        
+        // Crear grid si no existe
+        if (!productsGrid) {
+            const container = document.getElementById('productsContainer');
+            const newGrid = document.createElement('div');
+            newGrid.className = 'product-grid';
+            newGrid.id = 'productsGrid';
+            container.appendChild(newGrid);
+        }
+        
+        // Crear tarjeta de producto
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card';
+        productCard.setAttribute('data-product-id', product.id);
+        
+        productCard.innerHTML = `
+            <div class="product-title">${product.title}</div>
+            <div class="product-description">${product.description}</div>
+            <div class="product-price">$${product.price}</div>
+            <div class="product-stock">Stock: ${product.stock}</div>
+            <div class="product-category">${product.category}</div>
+            <div style="margin-top: 10px;">
+                <small>Código: ${product.code}</small>
+            </div>
+            <button class="btn btn-danger" onclick="deleteProduct(${product.id})">🗑️ Eliminar</button>
+        `;
+        
+        document.getElementById('productsGrid').appendChild(productCard);
+    }
+    
+    // Función para eliminar producto del DOM
+    function removeProductFromDOM(productId) {
+        const productCard = document.querySelector(`[data-product-id="${productId}"]`);
+        if (productCard) {
+            productCard.remove();
+            
+            // Mostrar estado vacío si no hay productos
+            const remainingProducts = document.querySelectorAll('.product-card');
+            if (remainingProducts.length === 0) {
+                const productsGrid = document.getElementById('productsGrid');
+                if (productsGrid) {
+                    productsGrid.remove();
+                }
+                
+                const container = document.getElementById('productsContainer');
+                const emptyState = document.createElement('div');
+                emptyState.className = 'empty-state';
+                emptyState.id = 'emptyState';
+                emptyState.innerHTML = `
+                    <h3>No hay productos disponibles</h3>
+                    <p>Agrega productos usando el formulario de arriba</p>
+                `;
+                container.appendChild(emptyState);
+            }
+        }
+    }
+    
+    // Función para mostrar mensajes de estado
+    function showStatus(message, type) {
+        const statusDiv = document.getElementById('statusMessage');
+        statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+        
+        setTimeout(() => {
+            statusDiv.innerHTML = '';
+        }, 3000);
+    }
+</script> 

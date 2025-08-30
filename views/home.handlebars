@@ -1,0 +1,27 @@
+<h2>📦 Lista de Productos</h2>
+
+{{#if products.length}}
+    <div class="product-grid">
+        {{#each products}}
+            <div class="product-card">
+                <div class="product-title">{{title}}</div>
+                <div class="product-description">{{description}}</div>
+                <div class="product-price">${{price}}</div>
+                <div class="product-stock">Stock: {{stock}}</div>
+                <div class="product-category">{{category}}</div>
+                <div style="margin-top: 10px;">
+                    <small>Código: {{code}}</small>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+{{else}}
+    <div class="empty-state">
+        <h3>No hay productos disponibles</h3>
+        <p>Agrega productos usando la API o desde la vista de tiempo real</p>
+    </div>
+{{/if}}
+
+<div style="margin-top: 30px; text-align: center;">
+    <a href="/realtimeproducts" class="btn">⚡ Ir a Real Time Products</a>
+</div> 

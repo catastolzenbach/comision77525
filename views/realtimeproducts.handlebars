@@ -48,7 +48,7 @@
     {{#if products.length}}
         <div class="product-grid" id="productsGrid">
             {{#each products}}
-                <div class="product-card" data-product-id="{{id}}">
+                <div class="product-card" data-product-id="{{_id}}">
                     <div class="product-title">{{title}}</div>
                     <div class="product-description">{{description}}</div>
                     <div class="product-price">${{price}}</div>
@@ -57,7 +57,7 @@
                     <div style="margin-top: 10px;">
                         <small>Código: {{code}}</small>
                     </div>
-                    <button class="btn btn-danger" onclick="deleteProduct({{id}})">🗑️ Eliminar</button>
+                    <button class="btn btn-danger" onclick="deleteProduct('{{_id}}')">🗑️ Eliminar</button>
                 </div>
             {{/each}}
         </div>
@@ -139,7 +139,7 @@
         // Crear tarjeta de producto
         const productCard = document.createElement('div');
         productCard.className = 'product-card';
-        productCard.setAttribute('data-product-id', product.id);
+        productCard.setAttribute('data-product-id', product._id);
         
         productCard.innerHTML = `
             <div class="product-title">${product.title}</div>
@@ -150,7 +150,7 @@
             <div style="margin-top: 10px;">
                 <small>Código: ${product.code}</small>
             </div>
-            <button class="btn btn-danger" onclick="deleteProduct(${product.id})">🗑️ Eliminar</button>
+            <button class="btn btn-danger" onclick="deleteProduct('${product._id}')">🗑️ Eliminar</button>
         `;
         
         document.getElementById('productsGrid').appendChild(productCard);
@@ -192,4 +192,4 @@
             statusDiv.innerHTML = '';
         }, 3000);
     }
-</script> 
+</script>

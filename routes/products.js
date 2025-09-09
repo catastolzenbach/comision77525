@@ -4,13 +4,72 @@ const ProductManager = require('../managers/ProductManager');
 const router = express.Router();
 const productManager = new ProductManager();
 
-// GET / - Listar todos los productos
+// GET / - Listar productos con paginación, filtros y ordenamiento
 router.get('/', async (req, res) => {
   try {
-    const products = await productManager.getProducts();
+    const { limit = 10, page = 1, sort, query } = req.query;
+    
+    // Obtener todos los productos
+    let products = await productManager.getProducts();
+    
+    // Aplicar filtros
+    if (query) {
+      if (query === 'available') {
+        products = products.filter(p => p.status === true && p.stock > 0);
+      } else if (query === 'unavailable') {
+        products = products.filter(p => p.status === false || p.stock === 0);
+      } else {
+        products = products.filter(p => 
+          p.category.toLowerCase().includes(query.toLowerCase())
+        );
+      }
+    }
+
+    // Aplicar ordenamiento
+    if (sort === 'asc') {
+      products.sort((a, b) => a.price - b.price);
+    } else if (sort === 'desc') {
+      products.sort((a, b) => b.price - a.price);
+    }
+
+    // Calcular paginación
+    const limitNum = parseInt(limit);
+    const pageNum = parseInt(page);
+    const totalDocs = products.length;
+    const totalPages = Math.ceil(totalDocs / limitNum);
+    const skip = (pageNum - 1) * limitNum;
+    
+    // Aplicar paginación
+    const paginatedProducts = products.slice(skip, skip + limitNum);
+
+    // Calcular páginas anterior y siguiente
+    const hasPrevPage = pageNum > 1;
+    const hasNextPage = pageNum < totalPages;
+    const prevPage = hasPrevPage ? pageNum - 1 : null;
+    const nextPage = hasNextPage ? pageNum + 1 : null;
+
+    // Construir URLs
+    const baseUrl = `${req.protocol}://${req.get('host')}${req.baseUrl}`;
+    
+    const prevLink = hasPrevPage ? 
+      `${baseUrl}?${new URLSearchParams({...req.query, page: prevPage}).toString()}` : 
+      null;
+    
+    const nextLink = hasNextPage ? 
+      `${baseUrl}?${new URLSearchParams({...req.query, page: nextPage}).toString()}` : 
+      null;
+
     res.json({
       status: 'success',
-      data: products
+      payload: paginatedProducts,
+      totalPages,
+      prevPage,
+      nextPage,
+      page: pageNum,
+      hasPrevPage,
+      hasNextPage,
+      prevLink,
+      nextLink
     });
   } catch (error) {
     res.status(500).json({
@@ -106,4 +165,4 @@ router.delete('/:pid', async (req, res) => {
   }
 });
 
-module.exports = router; 
+module.exports = router;

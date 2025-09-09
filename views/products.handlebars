@@ -1,0 +1,116 @@
+<h2>📦 Productos</h2>
+
+<!-- Filtros y ordenamiento -->
+<div class="form-container">
+  <form method="GET" action="/products">
+    <div style="display: flex; gap: 15px; align-items: end; flex-wrap: wrap;">
+      <div class="form-group" style="flex: 1; min-width: 200px;">
+        <label for="query">Filtrar por:</label>
+        <select id="query" name="query">
+          <option value="">Todos los productos</option>
+          <option value="available" {{#if (eq pagination.query 'available')}}selected{{/if}}>Disponibles</option>
+          <option value="unavailable" {{#if (eq pagination.query 'unavailable')}}selected{{/if}}>No disponibles</option>
+          <option value="Electrónicos" {{#if (eq pagination.query 'Electrónicos')}}selected{{/if}}>Electrónicos</option>
+          <option value="Ropa" {{#if (eq pagination.query 'Ropa')}}selected{{/if}}>Ropa</option>
+          <option value="Calzado" {{#if (eq pagination.query 'Calzado')}}selected{{/if}}>Calzado</option>
+        </select>
+      </div>
+      <div class="form-group" style="flex: 1; min-width: 150px;">
+        <label for="sort">Ordenar por precio:</label>
+        <select id="sort" name="sort">
+          <option value="">Sin ordenar</option>
+          <option value="asc" {{#if (eq pagination.sort 'asc')}}selected{{/if}}>Menor a Mayor</option>
+          <option value="desc" {{#if (eq pagination.sort 'desc')}}selected{{/if}}>Mayor a Menor</option>
+        </select>
+      </div>
+      <div class="form-group" style="flex: 1; min-width: 100px;">
+        <label for="limit">Por página:</label>
+        <select id="limit" name="limit">
+          <option value="5" {{#if (eq pagination.limit 5)}}selected{{/if}}>5</option>
+          <option value="10" {{#if (eq pagination.limit 10)}}selected{{/if}}>10</option>
+          <option value="20" {{#if (eq pagination.limit 20)}}selected{{/if}}>20</option>
+        </select>
+      </div>
+      <button type="submit" class="btn">🔍 Filtrar</button>
+    </div>
+  </form>
+</div>
+
+{{#if products.length}}
+  <div class="product-grid">
+    {{#each products}}
+      <div class="product-card">
+        <div class="product-title">{{title}}</div>
+        <div class="product-description">{{description}}</div>
+        <div class="product-price">${{price}}</div>
+        <div class="product-stock">Stock: {{stock}}</div>
+        <div class="product-category">{{category}}</div>
+        <div style="margin-top: 10px;">
+          <small>Código: {{code}}</small>
+        </div>
+        <div style="margin-top: 15px; display: flex; gap: 10px;">
+          <a href="/products/{{_id}}" class="btn">👁️ Ver Detalles</a>
+          <button class="btn btn-success" onclick="addToCart('{{_id}}')">🛒 Agregar al Carrito</button>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+
+  <!-- Paginación -->
+  {{#if pagination.totalPages}}
+    <div style="margin-top: 30px; text-align: center;">
+      <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+        {{#if pagination.hasPrevPage}}
+          <a href="/products?page={{pagination.prevPage}}&limit={{pagination.limit}}&sort={{pagination.sort}}&query={{pagination.query}}" class="btn">⬅️ Anterior</a>
+        {{/if}}
+        
+        <span style="padding: 10px 20px; background: #f8f9fa; border-radius: 5px;">
+          Página {{pagination.page}} de {{pagination.totalPages}}
+        </span>
+        
+        {{#if pagination.hasNextPage}}
+          <a href="/products?page={{pagination.nextPage}}&limit={{pagination.limit}}&sort={{pagination.sort}}&query={{pagination.query}}" class="btn">Siguiente ➡️</a>
+        {{/if}}
+      </div>
+    </div>
+  {{/if}}
+{{else}}
+  <div class="empty-state">
+    <h3>No hay productos disponibles</h3>
+    <p>No se encontraron productos con los filtros aplicados</p>
+  </div>
+{{/if}}
+
+<script>
+  function addToCart(productId) {
+    // Crear un carrito temporal o usar uno existente
+    fetch('/api/carts', {
+      method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'success') {
+        const cartId = data.data._id;
+        return fetch(`/api/carts/${cartId}/product/${productId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ quantity: 1 })
+        });
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'success') {
+        alert('Producto agregado al carrito exitosamente');
+      } else {
+        alert('Error al agregar el producto al carrito');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Error al agregar el producto al carrito');
+    });
+  }
+</script>

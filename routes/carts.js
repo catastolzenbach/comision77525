@@ -22,14 +22,42 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET /:cid - Obtener carrito por ID
+// GET /:cid - Obtener carrito por ID con productos completos
 router.get('/:cid', async (req, res) => {
   try {
     const cart = await cartManager.getCartById(req.params.cid);
     
+    // Obtener información completa de los productos
+    const productsWithDetails = [];
+    
+    for (const cartProduct of cart.products) {
+      try {
+        const product = await productManager.getProductById(cartProduct.product);
+        productsWithDetails.push({
+          product: product,
+          quantity: cartProduct.quantity
+        });
+      } catch (error) {
+        // Si el producto no existe, agregarlo con información básica
+        productsWithDetails.push({
+          product: {
+            _id: cartProduct.product,
+            title: 'Producto no encontrado',
+            description: 'Este producto ya no está disponible',
+            price: 0,
+            status: false
+          },
+          quantity: cartProduct.quantity
+        });
+      }
+    }
+    
     res.json({
       status: 'success',
-      data: cart
+      data: {
+        _id: cart.id,
+        products: productsWithDetails
+      }
     });
   } catch (error) {
     if (error.message === 'Carrito no encontrado') {
@@ -83,19 +111,19 @@ router.post('/:cid/product/:pid', async (req, res) => {
   }
 });
 
-// PUT /:cid/product/:pid - Actualizar cantidad de producto en el carrito
-router.put('/:cid/product/:pid', async (req, res) => {
+// PUT /:cid/products/:pid - Actualizar cantidad de producto en el carrito
+router.put('/:cid/products/:pid', async (req, res) => {
   try {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
-    
+
     if (quantity === undefined) {
       return res.status(400).json({
         status: 'error',
         message: 'La cantidad es requerida'
       });
     }
-    
+
     const updatedCart = await cartManager.updateProductQuantity(cid, pid, quantity);
     
     res.json({
@@ -118,8 +146,8 @@ router.put('/:cid/product/:pid', async (req, res) => {
   }
 });
 
-// DELETE /:cid/product/:pid - Eliminar producto del carrito
-router.delete('/:cid/product/:pid', async (req, res) => {
+// DELETE /:cid/products/:pid - Eliminar producto del carrito
+router.delete('/:cid/products/:pid', async (req, res) => {
   try {
     const { cid, pid } = req.params;
     
@@ -142,6 +170,42 @@ router.delete('/:cid/product/:pid', async (req, res) => {
         message: error.message
       });
     }
+  }
+});
+
+// PUT /:cid - Actualizar todos los productos del carrito
+router.put('/:cid', async (req, res) => {
+  try {
+    const { cid } = req.params;
+    const { products } = req.body;
+
+    if (!Array.isArray(products)) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Los productos deben ser un arreglo'
+      });
+    }
+
+    // Verificar que todos los productos existen
+    for (const item of products) {
+      await productManager.getProductById(item.product);
+    }
+
+    // Actualizar carrito (implementación simplificada)
+    const cart = await cartManager.getCartById(cid);
+    cart.products = products;
+    await cartManager.saveCarts();
+    
+    res.json({
+      status: 'success',
+      data: cart,
+      message: 'Carrito actualizado correctamente'
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
   }
 });
 
@@ -172,4 +236,4 @@ router.delete('/:cid', async (req, res) => {
   }
 });
 
-module.exports = router; 
+module.exports = router;

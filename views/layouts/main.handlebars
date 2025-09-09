@@ -42,6 +42,7 @@
             display: flex;
             justify-content: center;
             gap: 20px;
+            flex-wrap: wrap;
         }
         
         .nav a {
@@ -159,6 +160,8 @@
             font-size: 16px;
             font-weight: bold;
             transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
         
         .btn:hover {
@@ -210,6 +213,38 @@
         .empty-state h3 {
             margin-bottom: 10px;
         }
+        
+        .api-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .api-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .api-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .api-link {
+            background: #28a745;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .api-link:hover {
+            background: #218838;
+        }
     </style>
 </head>
 <body>
@@ -218,15 +253,51 @@
             <h1>🚀 API de Productos y Carritos</h1>
             <nav class="nav">
                 <a href="/" class="{{#if isHome}}active{{/if}}">🏠 Home</a>
-                <a href="/realtimeproducts" class="{{#if isRealTime}}active{{/if}}">⚡ Real Time Products</a>
-                <a href="/api/products" target="_blank">📦 API Products</a>
-                <a href="/api/carts" target="_blank">🛒 API Carts</a>
+                <a href="/products" class="{{#if isProducts}}active{{/if}}">📦 Productos</a>
+                <a href="/realtimeproducts" class="{{#if isRealTime}}active{{/if}}">⚡ Real Time</a>
             </nav>
         </div>
         
         <div class="content">
             {{{body}}}
+            
+            <!-- Sección de API -->
+            <div class="api-section">
+                <h3>🔗 Enlaces de la API</h3>
+                <div class="api-links">
+                    <a href="/api/products" class="api-link" target="_blank">📦 API Products</a>
+                    <a href="/api/products?limit=5&sort=asc" class="api-link" target="_blank">📦 Products (5 items, asc)</a>
+                    <a href="/api/products?query=Electrónicos" class="api-link" target="_blank">📦 Products (Electrónicos)</a>
+                    <a href="/api/carts/9" class="api-link" target="_blank">🛒 Cart #9</a>
+                    <a href="javascript:void(0)" onclick="createCart()" class="api-link">➕ Crear Carrito</a>
+                </div>
+            </div>
         </div>
     </div>
+
+    <script>
+        // Función para crear un nuevo carrito
+        async function createCart() {
+            try {
+                const response = await fetch('/api/carts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    alert(`Carrito creado con ID: ${data.data.id}`);
+                    // Abrir el carrito en una nueva pestaña
+                    window.open(`/api/carts/${data.data.id}`, '_blank');
+                } else {
+                    alert('Error al crear el carrito');
+                }
+            } catch (error) {
+                alert('Error al crear el carrito: ' + error.message);
+            }
+        }
+    </script>
 </body>
-</html> 
+</html>

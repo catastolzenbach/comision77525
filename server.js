@@ -13,11 +13,37 @@ const server = createServer(app);
 const io = new Server(server);
 const PORT = 8080;
 
-// Configurar Handlebars
+// Configurar Handlebars con helpers personalizados
 app.engine('handlebars', exphbs.engine({
   defaultLayout: 'main',
   layoutsDir: path.join(__dirname, 'views/layouts'),
-  partialsDir: path.join(__dirname, 'views/partials')
+  partialsDir: path.join(__dirname, 'views/partials'),
+  helpers: {
+    // Helper para comparaciones de igualdad
+    eq: function(a, b) {
+      return a === b;
+    },
+    // Helper para comparaciones de desigualdad
+    ne: function(a, b) {
+      return a !== b;
+    },
+    // Helper para comparaciones mayor que
+    gt: function(a, b) {
+      return a > b;
+    },
+    // Helper para comparaciones menor que
+    lt: function(a, b) {
+      return a < b;
+    },
+    // Helper para formatear precios
+    formatPrice: function(price) {
+      return new Intl.NumberFormat('es-CL', {
+        style: 'currency',
+        currency: 'CLP',
+        minimumFractionDigits: 0
+      }).format(price);
+    }
+  }
 }));
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
@@ -71,5 +97,5 @@ io.on('connection', (socket) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
-}); 
+  console.log(`Servidor corriendo en http://localhost:8080`);
+});
